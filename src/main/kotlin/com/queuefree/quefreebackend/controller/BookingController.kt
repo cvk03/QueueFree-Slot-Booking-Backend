@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/machines")
 class BookingController(private val bookingService: BookingService) {
 
-    @PostMapping("/{machineId}/bookings")
+    @PostMapping("/{machineUId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
     fun createBooking(
-        @PathVariable machineId: String,
+        @PathVariable machineUId: String,
         @Valid @RequestBody request: CreateBookingRequest
-    ){
-        bookingService.createBooking(machineId, request)
+    ): String {
+        bookingService.createBooking(machineUId, request)
+        return "Booking successful"
     }
 }

@@ -2,20 +2,13 @@ package com.queuefree.quefreebackend.service
 
 import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.repository.BookingRepository
+import com.queuefree.quefreebackend.repository.ListBookingsRepository
 import org.springframework.stereotype.Service
 
 @Service
-class BookingService(private val bookingRepository: BookingRepository) {
+class BookingService(private val bookingRepository: BookingRepository, private val newBookingRepository: ListBookingsRepository) {
 
-    fun createBooking(machineId: String, request: CreateBookingRequest){
-        if(!bookingRepository.machineExists(machineId)){
-            throw RuntimeException("Machine not found")
-        }
-
-        if(bookingRepository.bookingExists(machineId,request.date))
-        {
-            throw RuntimeException("Booking already exists for this date")
-        }
+    fun createBooking(machineUId: String, request: CreateBookingRequest){
 
         val bookingData = mapOf(
             "date" to request.date,
@@ -23,6 +16,10 @@ class BookingService(private val bookingRepository: BookingRepository) {
             "studentName" to request.studentName
         )
 
-        bookingRepository.createBooking(machineId,bookingData)
+        bookingRepository.createBooking(machineUId,request.date,bookingData)
+
+        //also add data to the bookings collection
+
+        newBookingRepository.addNewBooking(machineUId,request)
     }
 }

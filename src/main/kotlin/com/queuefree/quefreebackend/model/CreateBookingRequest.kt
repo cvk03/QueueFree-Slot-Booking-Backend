@@ -1,10 +1,12 @@
 package com.queuefree.quefreebackend.model
 
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+import java.util.Date
 
 data class CreateBookingRequest(
-    @field:NotBlank(message = "Date is required")
-    val date: String,
+    @field:NotNull(message = "Date is required")
+    val date: Date,
 
     @field:NotBlank(message = "Student MIS is required")
     val studentMis: String,
