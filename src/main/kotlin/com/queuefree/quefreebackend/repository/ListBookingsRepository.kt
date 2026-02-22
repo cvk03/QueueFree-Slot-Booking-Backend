@@ -5,6 +5,7 @@ import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.model.ListBookings
 import com.queuefree.quefreebackend.model.Machine
 import org.springframework.stereotype.Repository
+import java.util.Date
 
 @Repository
 class ListBookingsRepository(
@@ -22,7 +23,7 @@ class ListBookingsRepository(
                 bookingId = doc.id,  // document ID
                 machine = doc.getString("machine") ?: "",
                 student_mis = doc.getString("student_mis") ?: "",
-                date = doc.getTimestamp("date").toString()?: "",
+                date = (doc.getTimestamp("date")?.toDate() ?: "") as Date,
                 student_name = doc.getString("student_name") ?: "",
                 machineDoc_ref = doc.getString("booking_reference") ?: "",
             )
