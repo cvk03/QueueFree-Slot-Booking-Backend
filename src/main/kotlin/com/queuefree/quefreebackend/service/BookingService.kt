@@ -12,8 +12,8 @@ class BookingService(private val bookingRepository: BookingRepository, private v
 
         val bookingData = mapOf(
             "date" to request.date,
-            "studentMis" to request.studentMis,
-            "studentName" to request.studentName
+            "student_mis" to request.student_mis,
+            "student_name" to request.student_name
         )
 
         bookingRepository.createBooking(machineUId,request.date,bookingData)
