@@ -1,5 +1,6 @@
 package com.queuefree.quefreebackend.repository
 
+import com.google.cloud.Timestamp
 import com.google.cloud.firestore.Firestore
 import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.model.ListBookings
@@ -41,5 +42,40 @@ class ListBookingsRepository(
             "student_uid" to request.student_uid
         )
         firestore.collection("bookings").add(new_bookingsData).get()
+    }
+
+    fun getUpcomingBookings(student_uid: String): List<ListBookings> {
+
+        val upcomingBookings = collection
+            .whereEqualTo("student_uid", student_uid)
+            .whereGreaterThan("date", Timestamp.now()).get().get()
+
+
+        return upcomingBookings.documents.map {doc->
+            ListBookings(
+                bookingId = doc.id,  // document ID
+                machine = doc.getString("machine") ?: "",
+                student_uid = doc.getString("student_uid") ?: "",
+                date = (doc.getTimestamp("date"))!!.toDate(),
+                machine_reference = doc.getString("machine_reference") ?: "",
+            )
+        }
+    }
+
+    fun getCompletedBookings(student_uid: String): List<ListBookings> {
+        val completedBookings = collection
+            .whereEqualTo("student_uid", student_uid)
+            .whereLessThanOrEqualTo("date", Timestamp.now()).get().get()
+
+
+        return completedBookings.documents.map {doc->
+            ListBookings(
+                bookingId = doc.id,  // document ID
+                machine = doc.getString("machine") ?: "",
+                student_uid = doc.getString("student_uid") ?: "",
+                date = (doc.getTimestamp("date"))!!.toDate(),
+                machine_reference = doc.getString("machine_reference") ?: "",
+            )
+        }
     }
 }

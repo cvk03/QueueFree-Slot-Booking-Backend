@@ -12,7 +12,13 @@ class ListBookingsService(private val repository: ListBookingsRepository) {
         return repository.getAllBookings()
     }
 
+    fun getUpcomingBookings(student_uid: String): List<ListBookings> {
+            return repository.getUpcomingBookings(student_uid)
+    }
 
+    fun getCompletedBookings(student_uid: String): List<ListBookings> {
+        return repository.getCompletedBookings(student_uid)
+    }
 
 
 }
