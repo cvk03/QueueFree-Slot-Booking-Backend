@@ -2,6 +2,7 @@ package com.queuefree.quefreebackend.controller
 
 import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.service.BookingService
+import com.queuefree.quefreebackend.service.FirebaseAuthService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/machines")
-class BookingController(private val bookingService: BookingService) {
+class BookingController(
+    private val firebaseAuthService: FirebaseAuthService,
+    private val bookingService: BookingService) {
 
     @PostMapping("/{machineUId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
@@ -24,6 +27,10 @@ class BookingController(private val bookingService: BookingService) {
         @RequestHeader("Authorization") authHeader: String,
         @Valid @RequestBody request: CreateBookingRequest
     ): String {
+
+        val token = authHeader.removePrefix("Bearer ")
+        val decoded = firebaseAuthService.verifyToken(token)
+
         bookingService.createBooking(machineUId, request)
         return "Booking successful"
     }

@@ -9,8 +9,6 @@ data class CreateBookingRequest(
     val date: Date,
 
     @field:NotBlank(message = "Student MIS is required")
-    val student_mis: String,
+    val student_uid: String,
 
-    @field:NotBlank(message = "Student name is required")
-    val student_name: String
 )

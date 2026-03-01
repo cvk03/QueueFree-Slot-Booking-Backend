@@ -17,7 +17,7 @@ class MachineRepository(
             Machine(
                 id = doc.id,  // document ID
                 machineId = doc.getString("machine_id") ?: "",
-                hostel = doc.getString("hostel") ?: ""
+                hostel = doc.getString("hostel_name") ?: ""
             )
         }
     }

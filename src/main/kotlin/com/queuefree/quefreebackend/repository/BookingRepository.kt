@@ -9,26 +9,28 @@ class BookingRepository(
     private val firestore: Firestore
 ) {
 
+    val allMachines = firestore.collection("machines")
+
     fun machineExists(machineUId: String): Boolean {
 
-        val doc = firestore.collection("machines")
+        val machine = allMachines
             .document(machineUId)
             .get()
             .get()
 
-        return doc.exists()
+        return machine.exists()
     }
 
     fun bookingExists(machineUId: String, date: String): Boolean {
 
-        val snapshot = firestore.collection("machines")
+        val booking = allMachines
             .document(machineUId)
-            .collection("Booking")
+            .collection("booking")
             .whereEqualTo("date", date)
             .get()
             .get()
 
-        return !snapshot.isEmpty
+        return !booking.isEmpty
     }
 
     fun createBooking(
@@ -39,14 +41,14 @@ class BookingRepository(
 
         return firestore.runTransaction { transaction ->
 
-            val machineRef = firestore.collection("machines")
+            val machine = allMachines
                 .document(machineUId)
 
-            val bookingQuery = machineRef
-                .collection("Booking")
+            val bookingQuery = machine
+                .collection("booking")
                 .whereEqualTo("date", date)
 
-            val machineDoc = transaction.get(machineRef).get()
+            val machineDoc = transaction.get(machine).get()
 
             if (!machineDoc.exists()) {
                 throw Exception("Machine does not exist")
@@ -58,7 +60,7 @@ class BookingRepository(
                 throw Exception("Slot already booked")
             }
 
-            val newBookingRef = machineRef.collection("Booking").document()
+            val newBookingRef = machine.collection("booking").document()
 
             transaction.set(newBookingRef, data)
 

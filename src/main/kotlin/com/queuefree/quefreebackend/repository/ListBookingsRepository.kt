@@ -22,10 +22,9 @@ class ListBookingsRepository(
             ListBookings(
                 bookingId = doc.id,  // document ID
                 machine = doc.getString("machine") ?: "",
-                student_mis = doc.getString("student_mis") ?: "",
-                date = (doc.getTimestamp("date")?.toDate() ?: "") as Date,
-                student_name = doc.getString("student_name") ?: "",
-                machineDoc_ref = doc.getString("booking_reference") ?: "",
+                student_uid = doc.getString("student_uid") ?: "",
+                date = (doc.getTimestamp("date"))!!.toDate(),
+                machine_reference = doc.getString("machine_reference") ?: "",
             )
 
         }
@@ -33,14 +32,13 @@ class ListBookingsRepository(
     }
 
     fun addNewBooking(machineUid: String, request: CreateBookingRequest) {
-        val machine = firestore.collection("machine").document(machineUid).get().get()
+        val machine = firestore.collection("machines").document(machineUid).get().get()
 
         val new_bookingsData = mapOf(
-            "booking_reference" to machineUid,
+            "machine_reference" to machineUid,
             "date" to request.date,
             "machine" to machine.getString("machine_id"),
-            "student_name" to request.studentName,
-            "student_mis" to request.studentMis
+            "student_uid" to request.student_uid
         )
         firestore.collection("bookings").add(new_bookingsData).get()
     }
