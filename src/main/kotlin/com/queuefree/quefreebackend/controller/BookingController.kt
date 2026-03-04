@@ -1,10 +1,12 @@
 package com.queuefree.quefreebackend.controller
 
+import com.google.cloud.Timestamp
 import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.service.BookingService
 import com.queuefree.quefreebackend.service.FirebaseAuthService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -33,5 +35,23 @@ class BookingController(
 
         bookingService.createBooking(machineUId, request)
         return "Booking successful"
+    }
+
+    @GetMapping("/{machineUId}/available-slots")
+    fun getAvailableSlots(
+        @PathVariable machineUId: String,
+        @RequestHeader("Authorization") authHeader: String,
+        @RequestParam("date") selectedDay: Long
+    ): List<Timestamp> {
+
+        val token = authHeader.removePrefix("Bearer ")
+        firebaseAuthService.verifyToken(token)
+
+        val dayTimestamp = Timestamp.ofTimeSecondsAndNanos(
+            selectedDay / 1000,
+            ((selectedDay % 1000) * 1_000_000).toInt()
+        )
+
+        return bookingService.getAvailableSlotsForDay(machineUId, dayTimestamp)
     }
 }

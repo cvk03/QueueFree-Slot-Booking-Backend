@@ -1,5 +1,6 @@
 package com.queuefree.quefreebackend.service
 
+import com.google.cloud.Timestamp
 import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.repository.BookingRepository
 import com.queuefree.quefreebackend.repository.ListBookingsRepository
@@ -29,5 +30,9 @@ class BookingService(private val bookingRepository: BookingRepository, private v
         //also add data to the bookings collection
 
         newBookingRepository.addNewBooking(machineUId,request)
+    }
+
+    fun getAvailableSlotsForDay(machineUId: String, selectedDay: Timestamp) : List<Timestamp> {
+        return bookingRepository.getAvailableSlotsForDay(machineUId,selectedDay)
     }
 }

@@ -1,5 +1,6 @@
 package com.queuefree.quefreebackend.repository
 import com.google.cloud.firestore.Firestore
+import com.queuefree.quefreebackend.model.CreateBookingRequest
 import com.queuefree.quefreebackend.model.Machine
 import org.springframework.stereotype.Repository
 
@@ -21,5 +22,7 @@ class MachineRepository(
             )
         }
     }
+
+
 
 }
