@@ -14,7 +14,7 @@ class FirebaseConfig {
     fun firestore(): com.google.cloud.firestore.Firestore {
 
         val serviceAccount: InputStream =
-            javaClass.classLoader.getResourceAsStream("firebase-service-account.json")
+            javaClass.classLoader.getResourceAsStream("FIREBASE_CREDENTIALS_PATH")
                 ?: throw RuntimeException("Firebase service account not found")
 
         val options = FirebaseOptions.builder()
